@@ -1,0 +1,13 @@
+{
+  "name": "@koa-ioc/misc",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "ts-node ../../scripts/build.ts --package misc"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

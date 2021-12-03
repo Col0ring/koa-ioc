@@ -1,0 +1,19 @@
+{
+  "name": "@koa-ioc/pipe",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "ts-node ../../scripts/build.ts --package pipe"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@koa-ioc/core": "1.0.0",
+    "@koa-ioc/exception": "1.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2"
+  }
+}
