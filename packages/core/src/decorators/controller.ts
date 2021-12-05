@@ -20,6 +20,7 @@ import {
   PipeTransformer,
   ParamMetadata,
 } from '../type'
+import { isInjectable } from '../utils'
 
 const pipeClassCacheMap = new Map<Creator<PipeTransformer>, PipeTransformer>()
 
@@ -49,12 +50,11 @@ function createInstance<T>(creator: Creator<T>): T {
   const injects: InjectMetadata =
     Reflect.getMetadata(Decorator.Inject, creator) || []
   const args = params.map((param, index) => {
-    const isInjectable = Reflect.getMetadata(Decorator.Injectable, param)
     const inject = injects[index]
-    if (isFunction(inject)) {
+    if (isInjectable(inject)) {
       return createInstance(inject)
     }
-    if (isInjectable) {
+    if (isInjectable(param)) {
       return createInstance(param)
     }
     return inject
@@ -140,7 +140,6 @@ export function Controller(prefix = ''): TargetFunction {
 
           ctxMetadata.forEach((index) => (handlerArgs[index] = ctx))
           nextMetadata.forEach((index) => (handlerArgs[index] = next))
-
           // pipe
           for (const { pipe, index } of controllerPipeMetadata) {
             let transformer: PipeTransformer

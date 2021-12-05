@@ -12,5 +12,5 @@ app
   .useControllers([HelloController])
   .bootstrap()
   .listen(3000, () => {
-    console.log('listening on http://loalhost:3000')
+    console.log('listening on http://localhost:3000')
   })

@@ -1,30 +1,42 @@
-import { PipeTransformer, ArgumentMetadata } from '@koa-ioc/core'
-import { BadRequestException } from '@koa-ioc/exception'
-import { validate } from 'class-validator'
-import { plainToInstance } from 'class-transformer'
+import { noop } from '@koa-ioc/misc'
+import { ValidateOptions } from './types'
 
-export class ValidatorPipe implements PipeTransformer {
-  async transform(value: any, { metatype }: ArgumentMetadata) {
-    if (!metatype || !this.toValidate(metatype)) {
-      return value
+export class Validator {
+  protected onValid: Required<ValidateOptions>['onValid']
+  private onError: (error: any) => Promise<void>
+  protected error: any = null
+  private hasCallNext = false
+  private isThrowError = true
+  private waitNext = false
+  constructor({ onValid = noop, onError = noop }: ValidateOptions = {}) {
+    this.onValid = onValid
+    if (onError.length >= 2) {
+      this.waitNext = true
+      this.isThrowError = false
     }
-    const object = plainToInstance(metatype, value)
-    const errors = await validate(object)
-    if (errors.length > 0) {
-      throw new BadRequestException({
-        message: errors
-          .map((error) =>
-            error.constraints
-              ? Object.values(error.constraints)
-              : error.constraints
-          )
-          .join(),
-      })
+    this.onError = async (error) => {
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      await onError(error, this.next.bind(this))
+      this.hasCallNext = false
     }
-    return value
   }
-  private toValidate(metatype: Function): boolean {
-    const types: Function[] = [String, Boolean, Number, Array, Object]
-    return !types.includes(metatype)
+  private next(error: any = null) {
+    if (this.hasCallNext) {
+      return
+    }
+    this.hasCallNext = true
+    this.error = error
+    if (error) {
+      this.isThrowError = true
+    }
+  }
+  protected async throwError(error: any) {
+    const thenable = this.onError(error)
+    if (this.waitNext) {
+      await thenable
+    }
+    if (this.isThrowError) {
+      throw error
+    }
   }
 }

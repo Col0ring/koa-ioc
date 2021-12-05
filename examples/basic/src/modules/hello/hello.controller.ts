@@ -11,13 +11,15 @@ import {
   Post,
   Req,
   Param,
+  CustomParam,
 } from '@koa-ioc/core'
-import { ValidatorPipe } from '@koa-ioc/pipe'
+import { HttpException } from '@koa-ioc/exception'
+import { ValidateClassPipe, ValidatorIntegerPipe } from '@koa-ioc/pipe'
 import { HelloService } from './hello.service'
 import { Validator } from '../../pipes/validator.pipe'
 
 @Controller('/example')
-@Pipe(ValidatorPipe)
+// @Pipe(ValidateClassPipe)
 @Exception(async (ctx, next) => {
   try {
     await next()
@@ -48,11 +50,24 @@ export class HelloController {
   @Exception(async (ctx, next) => {
     try {
       await next()
-    } catch (error) {
-      ctx.body = 'error2'
+    } catch (error: any) {
+      ctx.body = error.toJSON()
     }
   })
-  hello(@Ctx() ctx: Context, @Param() a: string) {
+  hello(
+    @Ctx() ctx: Context,
+    @Param(
+      'a',
+      new ValidatorIntegerPipe({
+        async onError(error, next) {
+          await error
+          error.message = 12
+          next(error)
+        },
+      })
+    )
+    a: number
+  ) {
     return a
   }
   @Post('/')

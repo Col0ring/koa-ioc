@@ -1,7 +1,7 @@
 import Koa, { Middleware } from 'koa'
 import koaBody from 'koa-body'
 import { Creator } from '@koa-ioc/misc'
-import { Method, ParamPath } from './constants'
+import { Method } from './constants'
 
 export type Methods = Method | Capitalize<Method>
 export type HttpHandler = (...args: any[]) => Promise<unknown> | unknown
@@ -40,7 +40,7 @@ export interface PipeConfig {
 export type PipeMetadata = PipeConfig[]
 
 export interface ParamConfig {
-  paramPath: ParamPath
+  paramPath: string
   index: number
   name?: string
 }

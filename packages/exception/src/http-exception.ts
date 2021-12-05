@@ -8,4 +8,11 @@ export class HttpException<T> extends Error {
     this.data = data
     this.status = status
   }
+  toJSON() {
+    return {
+      status: this.status,
+      message: this.message,
+      data: this.data,
+    }
+  }
 }

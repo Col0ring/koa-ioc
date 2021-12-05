@@ -1,5 +1,9 @@
 import { Creator } from './type'
 
+export function noop() {
+  // do nothing
+}
+
 export function isFunction(val: any): val is Function {
   return typeof val === 'function'
 }
@@ -17,6 +21,11 @@ export function isClass(val: any): val is Creator {
     /^class\s/.test(Function.prototype.toString.call(val))
   )
 }
+
+export function isPromise(val: any): val is Promise<any> {
+  return val instanceof Promise
+}
+
 /**
  * change the type of val
  * @param val

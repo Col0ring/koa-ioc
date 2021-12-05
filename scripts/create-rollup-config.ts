@@ -9,7 +9,9 @@ import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import del from 'rollup-plugin-delete'
 const extensions = ['.ts', '.js', '.json']
-export function createConfig(dir: string) {
+export async function createConfig(dir: string) {
+  const pkg = (await import(`${path.resolve(dir, './package.json')}`)).default
+
   return defineConfig({
     input: path.resolve(dir, './src/index.ts'),
     plugins: [
@@ -31,14 +33,7 @@ export function createConfig(dir: string) {
       terser(),
       del({ targets: path.resolve(dir, './dist') }),
     ],
-    external: [
-      'koa',
-      '@koa/router',
-      'koa-body',
-      'class-validator',
-      'class-transformer',
-      /^@koa-ioc\//,
-    ],
+    external: [...Object.keys(pkg.dependencies || {}), /^@koa-ioc\//],
     output: [
       {
         file: path.resolve(dir, './dist/index.cjs.js'),

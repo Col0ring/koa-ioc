@@ -3,7 +3,7 @@ import { Decorator, ParamPath } from '../constants'
 import { ParamMetadata, PipeOptions } from '../type'
 import { Pipe } from './pipe'
 
-function createParamDecorator<T extends string>(paramPath: ParamPath) {
+function createParamDecorator<T extends string>(paramPath: string) {
   function ParamDecorator(): TargetParamFunction
   function ParamDecorator(name: T, ...pipes: PipeOptions[]): TargetParamFunction
   function ParamDecorator(...pipes: PipeOptions[]): TargetParamFunction
@@ -34,6 +34,8 @@ function createParamDecorator<T extends string>(paramPath: ParamPath) {
   }
   return ParamDecorator
 }
+export const CustomParam = (paramPath: string, ...pipes: PipeOptions[]) =>
+  createParamDecorator(paramPath)(...pipes)
 export const Req = createParamDecorator(ParamPath.Req)
 export const Res = createParamDecorator(ParamPath.Res)
 export const Query = createParamDecorator(ParamPath.Query)

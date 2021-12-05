@@ -12,7 +12,7 @@ async function build() {
     )
     return
   }
-  const options = createConfig(
+  const options = await createConfig(
     path.join(__dirname, `../packages/${packageName}`)
   )
   const outputOptions = options.output
