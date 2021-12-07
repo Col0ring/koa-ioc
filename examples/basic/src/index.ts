@@ -9,6 +9,7 @@ app
   .useBodyParser({
     multipart: true,
   })
+  .useLogger()
   .usePrefix('/api')
   .useControllers([HelloController, AuthController])
   .bootstrap()

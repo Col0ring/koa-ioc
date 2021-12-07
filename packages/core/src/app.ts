@@ -4,6 +4,7 @@ import { assertType } from '@koa-ioc/misc'
 import KoaRouter from '@koa/router'
 import koaBody from 'koa-body'
 import koaCors from '@koa/cors'
+import koaLogger from 'koa-logger'
 import koaStatic from 'koa-static'
 import { Decorator } from './constants'
 import { Application, Mixins } from './type'
@@ -14,6 +15,8 @@ export function createApp(app: Koa): Application {
 
   // change type
   assertType<Application>(app)
+  // old use method
+  const oldUse = app.use.bind(app)
 
   return Object.assign(app, {
     bootstrap() {
@@ -21,6 +24,10 @@ export function createApp(app: Koa): Application {
         router.prefix(globalPrefix)
         app.use(router.routes()).use(router.allowedMethods())
       })
+      return this
+    },
+    use(middleware) {
+      oldUse(middleware)
       return this
     },
     useControllers(controllers) {
@@ -34,6 +41,10 @@ export function createApp(app: Koa): Application {
         }
         routers.push(router)
       })
+      return this
+    },
+    useLogger(...args) {
+      app.use(koaLogger(...args))
       return this
     },
     useCors(options) {

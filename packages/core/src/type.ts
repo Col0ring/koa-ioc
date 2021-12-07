@@ -1,9 +1,11 @@
 import Koa, { Middleware } from 'koa'
 import koaBody from 'koa-body'
+import KoaLogger from 'koa-logger'
 import koaCors from '@koa/cors'
 import koaStatic from 'koa-static'
 import { Creator } from '@koa-ioc/misc'
 import { Method } from './constants'
+KoaLogger
 
 export type Methods = Method | Capitalize<Method>
 export type HttpHandler = (...args: any[]) => Promise<unknown> | unknown
@@ -50,11 +52,13 @@ export type ParamMetadata = ParamConfig[]
 
 export interface Mixins {
   bootstrap(): this
+  use(middleware: Middleware): this
   useControllers(controllers: Creator[]): this
+  useLogger(...args: Parameters<typeof KoaLogger>): this
   useCors(options?: koaCors.Options): this
   useStatic(root: string, options?: koaStatic.Options): this
   useBodyParser(options?: koaBody.IKoaBodyOptions): this
   usePrefix(prefix: string): this
 }
 
-export interface Application extends Koa, Mixins {}
+export interface Application extends Omit<Koa, 'use'>, Mixins {}
