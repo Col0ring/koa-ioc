@@ -1,0 +1,18 @@
+{
+  "name": "@koa-ioc/db",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "ts-node ../../scripts/build.ts --package db"
+  },
+  "dependencies": {
+    "@koa-ioc/core": "^1.0.0",
+    "@koa-ioc/misc": "^1.0.0",
+    "typeorm": "^0.2.41"
+  }
+}
