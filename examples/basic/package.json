@@ -1,16 +1,26 @@
 {
   "name": "basic",
   "scripts": {
-    "dev": "nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts"
+    "dev": "nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts",
+    "dev:source": "cross-env USE_SOURCE=true nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts"
   },
   "devDependencies": {
     "@types/module-alias": "^2.0.1",
+    "cross-env": "^7.0.3",
     "module-alias": "^2.2.2",
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "koa": "^2.13.4"
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^10.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "koa-static": "^5.0.0",
+    "typeorm": "^0.2.41"
   }
 }

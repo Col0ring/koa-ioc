@@ -24,6 +24,7 @@ export async function createConfig(dir: string) {
       }),
       getBabelOutputPlugin({
         presets: [['@babel/preset-env', { modules: false }]],
+        plugins: [['@babel/plugin-transform-runtime', { useESModules: true }]],
       }),
       json(),
       commonjs(),
