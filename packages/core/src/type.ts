@@ -1,5 +1,7 @@
 import Koa, { Middleware } from 'koa'
 import koaBody from 'koa-body'
+import koaCors from '@koa/cors'
+import koaStatic from 'koa-static'
 import { Creator } from '@koa-ioc/misc'
 import { Method } from './constants'
 
@@ -49,6 +51,8 @@ export type ParamMetadata = ParamConfig[]
 export interface Mixins {
   bootstrap(): this
   useControllers(controllers: Creator[]): this
+  useCors(options?: koaCors.Options): this
+  useStatic(root: string, options?: koaStatic.Options): this
   useBodyParser(options?: koaBody.IKoaBodyOptions): this
   usePrefix(prefix: string): this
 }

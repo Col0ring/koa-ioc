@@ -4,6 +4,10 @@ export function noop() {
   // do nothing
 }
 
+export function isError(val: any): val is Error {
+  return val instanceof Error
+}
+
 export function isFunction(val: any): val is Function {
   return typeof val === 'function'
 }
@@ -13,6 +17,10 @@ export function isString(val: any): val is string {
 
 export function isNumber(val: any): val is number {
   return typeof val === 'number'
+}
+
+export function isObject(val: any): val is object {
+  return typeof val === 'object' && val !== null
 }
 
 export function isClass(val: any): val is Creator {

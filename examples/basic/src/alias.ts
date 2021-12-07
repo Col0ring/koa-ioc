@@ -1,7 +1,7 @@
 import path from 'path'
 import { addAliases } from 'module-alias'
 
-const packages = ['core', 'exception', 'pipe']
+const packages = ['core', 'exception', 'pipe', 'auth']
 
 function createAlias(names: string[]) {
   return names.reduce((prev, next) => {

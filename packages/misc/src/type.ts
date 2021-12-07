@@ -1,3 +1,4 @@
+export type PromisifyValue<T = any> = Promise<T> | T
 export interface Creator<T = any, P extends any[] = any[]> {
   new (...args: P): T
 }

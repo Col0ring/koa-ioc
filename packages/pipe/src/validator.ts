@@ -1,5 +1,5 @@
 import { noop } from '@koa-ioc/misc'
-import { ValidateOptions } from './types'
+import { ValidateOptions } from './type'
 
 export class Validator {
   protected onValid: Required<ValidateOptions>['onValid']
@@ -15,7 +15,6 @@ export class Validator {
       this.isThrowError = false
     }
     this.onError = async (error) => {
-      // eslint-disable-next-line @typescript-eslint/await-thenable
       await onError(error, this.next.bind(this))
       this.hasCallNext = false
     }
