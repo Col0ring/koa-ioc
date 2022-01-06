@@ -1,3 +1,4 @@
+import { ensureArray } from '@koa-ioc/misc'
 import { createConnections, ConnectionOptions, Connection } from 'typeorm'
 
 let connections: Connection[] = []
@@ -5,9 +6,8 @@ let connections: Connection[] = []
 export async function useConnections(
   options: ConnectionOptions | ConnectionOptions[]
 ) {
-  const connectOptions = Array.isArray(options) ? options : [options]
   await closeConnections()
-  connections = await createConnections(connectOptions)
+  connections = await createConnections(ensureArray(options))
   return connections
 }
 

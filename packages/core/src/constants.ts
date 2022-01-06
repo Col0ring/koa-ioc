@@ -31,6 +31,8 @@ export enum ParamPath {
   Param = 'params',
   Query = 'query',
   Header = 'headers',
+  Cookies = 'cookies',
+  Session = 'session',
   Body = 'request.body',
   Files = 'request.files',
 }

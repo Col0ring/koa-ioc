@@ -1,4 +1,10 @@
-import { Creator, TargetObject, isFunction, isString } from '@koa-ioc/misc'
+import {
+  Creator,
+  ensureArray,
+  TargetObject,
+  isFunction,
+  isString,
+} from '@koa-ioc/misc'
 import { Decorator, MiddlewarePosition } from '../constants'
 import { MiddlewareMetadata, MiddlewareOptions } from '../type'
 
@@ -6,17 +12,17 @@ export function Middleware(
   middleware: MiddlewareOptions | MiddlewareOptions[]
 ) {
   return function (target: Creator | TargetObject, methodName?: string) {
-    const middlewares: MiddlewareMetadata = (
-      Array.isArray(middleware) ? middleware : [middleware]
-    ).map((mdw) => {
-      if (isFunction(mdw)) {
-        return {
-          position: MiddlewarePosition.Pre,
-          middleware: mdw,
+    const middlewares: MiddlewareMetadata = ensureArray(middleware).map(
+      (mdw) => {
+        if (isFunction(mdw)) {
+          return {
+            position: MiddlewarePosition.Pre,
+            middleware: mdw,
+          }
         }
+        return mdw
       }
-      return mdw
-    })
+    )
 
     if (isString(methodName)) {
       const middlewareMetaData: MiddlewareMetadata =

@@ -1,4 +1,4 @@
-import { OutputOptions, rollup } from 'rollup'
+import { OutputOptions, rollup, RollupOptions } from 'rollup'
 import chalk from 'chalk'
 import path from 'path'
 import yargs from 'yargs'
@@ -12,25 +12,33 @@ async function build() {
     )
     return
   }
-  const options = await createConfig(
+  const config = await createConfig(
     path.join(__dirname, `../packages/${packageName}`)
   )
-  const outputOptions = options.output
-    ? Array.isArray(options.output)
-      ? options.output
-      : [options.output]
-    : []
-
-  // create a bundle
-  const bundle = await rollup(options)
-  async function genAndWrite(outputOption: OutputOptions) {
-    await bundle.generate(outputOption)
-    // or write the bundle to disk
-    await bundle.write(outputOption)
-    // closes the bundle
-    await bundle.close()
+  for (const options of config) {
+    await compile(options)
   }
-  outputOptions.forEach((outputOption) => void genAndWrite(outputOption))
+
+  async function compile(options: RollupOptions) {
+    const outputOptions = options.output
+      ? Array.isArray(options.output)
+        ? options.output
+        : [options.output]
+      : []
+
+    // create a bundle
+    const bundle = await rollup(options)
+    async function genAndWrite(outputOption: OutputOptions) {
+      await bundle.generate(outputOption)
+      // or write the bundle to disk
+      await bundle.write(outputOption)
+      // closes the bundle
+      await bundle.close()
+    }
+    await Promise.all(
+      outputOptions.map((outputOption) => genAndWrite(outputOption))
+    )
+  }
 }
 
 void build()

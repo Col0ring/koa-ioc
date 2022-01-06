@@ -1,23 +1,18 @@
 import { TargetMethodFunction } from '@koa-ioc/misc'
 import { Decorator, Method } from '../constants'
-import { MethodMetadata, HttpHandler } from '../type'
+import { MethodMetadata } from '../type'
 
 function createMethodDecorator(method: Method) {
   return function (path = ''): TargetMethodFunction {
     return function (target, methodName) {
-      const handler: HttpHandler = target[methodName]
-      const methodMetadata: MethodMetadata = {
+      const methodMetadata: MethodMetadata =
+        Reflect.getMetadata(Decorator.Method, target) || []
+      methodMetadata.push({
         path,
         method,
-        handler,
-      }
-
-      Reflect.defineMetadata(
-        Decorator.Method,
-        methodMetadata,
-        target,
-        methodName
-      )
+        name: methodName,
+      })
+      Reflect.defineMetadata(Decorator.Method, methodMetadata, target)
     }
   }
 }

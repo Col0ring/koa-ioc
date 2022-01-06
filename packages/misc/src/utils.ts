@@ -1,4 +1,4 @@
-import { Creator } from './type'
+import { EnsureArray, Creator } from './type'
 
 export function noop() {
   // do nothing
@@ -40,4 +40,8 @@ export function isPromise(val: any): val is Promise<any> {
  */
 export function assertType<T>(val: any): asserts val is T {
   // do nothing
+}
+
+export function ensureArray<T>(val: T): EnsureArray<T> {
+  return (Array.isArray(val) ? val : [val]) as EnsureArray<T>
 }

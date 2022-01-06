@@ -1,10 +1,8 @@
-import { Middleware } from 'koa'
 import KoaRouter from '@koa/router'
 import {
   Creator,
   TargetFunction,
   isClass,
-  isFunction,
   isNumber,
   isString,
 } from '@koa-ioc/misc'
@@ -19,13 +17,14 @@ import {
   PipeMetadata,
   PipeTransformer,
   ParamMetadata,
+  Middlewares,
 } from '../type'
 import { isInjectable } from '../utils'
 
 const pipeClassCacheMap = new Map<Creator<PipeTransformer>, PipeTransformer>()
 
-function getMiddlewares(middlewareMetadata: MiddlewareMetadata) {
-  return middlewareMetadata.reduce(
+function getMiddlewares(middlewareMetadata: MiddlewareMetadata): Middlewares {
+  return middlewareMetadata.reduce<Middlewares>(
     (middlewares, { middleware, position }) => {
       if (position === MiddlewarePosition.Post) {
         middlewares.postMiddlewares.push(middleware)
@@ -37,9 +36,6 @@ function getMiddlewares(middlewareMetadata: MiddlewareMetadata) {
     {
       preMiddlewares: [],
       postMiddlewares: [],
-    } as {
-      preMiddlewares: Middleware[]
-      postMiddlewares: Middleware[]
     }
   )
 }
@@ -81,19 +77,13 @@ export function Controller(prefix = ''): TargetFunction {
 
     const controllerPipeMetadata: PipeMetadata =
       Reflect.getMetadata(Decorator.Pipe, target) || []
-    const keys = Object.getOwnPropertyNames(target.prototype)
-    for (const key of keys) {
-      if (!isFunction(controller[key])) {
-        continue
-      }
-      const methodMetadata: MethodMetadata = Reflect.getMetadata(
-        Decorator.Method,
-        controller,
-        key
-      )
-      if (!methodMetadata) {
-        continue
-      }
+
+    const methodMetadata: MethodMetadata = Reflect.getMetadata(
+      Decorator.Method,
+      controller
+    )
+
+    methodMetadata.forEach(({ method, path, name: key }) => {
       const middlewareMetadata: MiddlewareMetadata =
         Reflect.getMetadata(Decorator.Middleware, controller, key) || []
       const exceptionMetadata: ExceptionMetadata =
@@ -114,11 +104,9 @@ export function Controller(prefix = ''): TargetFunction {
         controller,
         key
       )
-
       const hasNextHandler = nextMetadata.length !== 0
       const { preMiddlewares, postMiddlewares } =
         getMiddlewares(middlewareMetadata)
-      const { method, handler, path } = methodMetadata
 
       router[method.toLowerCase() as Method](
         path,
@@ -197,7 +185,7 @@ export function Controller(prefix = ''): TargetFunction {
             }
           }
 
-          const body = await handler.call(controller, ...handlerArgs)
+          const body = await controller[key](...handlerArgs)
           ctx.body ??= body
           if (!hasNextHandler) {
             await next()
@@ -206,7 +194,8 @@ export function Controller(prefix = ''): TargetFunction {
         ...postMiddlewares,
         ...postControllerMiddlewares
       )
-    }
+    })
+
     Reflect.defineMetadata(Decorator.Controller, router, target)
   }
 }

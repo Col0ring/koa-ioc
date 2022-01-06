@@ -34,11 +34,14 @@ function createParamDecorator<T extends string>(paramPath: string) {
   }
   return ParamDecorator
 }
+
 export const CustomParam = (paramPath: string, ...pipes: PipeOptions[]) =>
   createParamDecorator(paramPath)(...pipes)
 export const Req = createParamDecorator(ParamPath.Req)
 export const Res = createParamDecorator(ParamPath.Res)
 export const Query = createParamDecorator(ParamPath.Query)
+export const Session = createParamDecorator(ParamPath.Session)
+export const Cookies = createParamDecorator(ParamPath.Cookies)
 export const Param = createParamDecorator(ParamPath.Param)
 export const Header = createParamDecorator(ParamPath.Header)
 export const Body = createParamDecorator(ParamPath.Body)
