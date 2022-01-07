@@ -7,7 +7,6 @@ import koaCors from '@koa/cors'
 import koaStatic from 'koa-static'
 import { Creator } from '@koa-ioc/misc'
 import { Method } from './constants'
-KoaLogger
 
 export type Methods = Method | Capitalize<Method>
 
@@ -17,7 +16,10 @@ export interface MethodConfig {
   name: string
 }
 export type MethodMetadata = MethodConfig[]
-
+export interface ControllerMetadata {
+  controller: boolean
+  prefix?: string
+}
 export type ProvideMetadata = Provider[]
 
 export interface PropertiesInjectConfig {

@@ -1,19 +1,20 @@
 export enum Metadata {
   Params = 'design:paramtypes',
+  Type = 'design:type',
 }
 export enum Decorator {
-  Controller = 'controller',
-  Method = 'method',
-  Provide = 'provide',
-  Injectable = 'injectable',
-  ParamsInject = 'params-inject',
-  PropertiesInject = 'properties-inject',
-  Middleware = 'middleware',
-  Exception = 'exception',
-  Ctx = 'ctx',
-  Next = 'next',
-  Pipe = 'pipe',
-  Param = 'param',
+  Controller = 'ioc:controller',
+  Method = 'ioc:method',
+  Provide = 'ioc:provide',
+  Injectable = 'ioc:injectable',
+  ParamsInject = 'ioc:params-inject',
+  PropertiesInject = 'ioc:properties-inject',
+  Middleware = 'ioc:middleware',
+  Exception = 'ioc:exception',
+  Ctx = 'ioc:ctx',
+  Next = 'ioc:next',
+  Pipe = 'ioc:pipe',
+  Param = 'ioc:param',
 }
 
 export enum Method {

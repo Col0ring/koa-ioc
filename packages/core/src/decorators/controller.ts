@@ -20,6 +20,7 @@ import {
   Middlewares,
   ProvideMetadata,
   PropertiesInjectMetadata,
+  ControllerMetadata,
 } from '../type'
 import { createInstance } from '../utils'
 import container, { Container } from '../container'
@@ -45,6 +46,12 @@ function getMiddlewares(middlewareMetadata: MiddlewareMetadata): Middlewares {
 
 export function Controller(prefix = ''): TargetFunction {
   return function (target) {
+    // const controllerMetadata: ControllerMetadata = {
+    //   controller: true,
+    //   prefix,
+    // }
+    // Reflect.defineMetadata(Decorator.Controller, controllerMetadata, target)
+
     const router = new KoaRouter({
       prefix,
     })

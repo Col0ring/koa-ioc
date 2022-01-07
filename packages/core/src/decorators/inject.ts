@@ -1,5 +1,5 @@
 import { isUndefined, Creator, TargetObject, isNumber } from '@koa-ioc/misc'
-import { Decorator } from '../constants'
+import { Decorator, Metadata } from '../constants'
 import { ParamsInjectMetadata, PropertiesInjectMetadata } from '../type'
 
 export function Inject<T = any>(token?: T) {
@@ -21,7 +21,7 @@ export function Inject<T = any>(token?: T) {
       return
     }
 
-    const type = token || Reflect.getMetadata('design:type', target, key)
+    const type = token || Reflect.getMetadata(Metadata.Type, target, key)
     const properties: PropertiesInjectMetadata =
       Reflect.getMetadata(Decorator.PropertiesInject, target.constructor) || []
     properties.push({
