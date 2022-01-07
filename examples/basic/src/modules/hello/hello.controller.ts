@@ -3,6 +3,7 @@ import {
   Controller,
   Ctx,
   Exception,
+  Provide,
   Get,
   Pipe,
   Middleware,
@@ -37,12 +38,18 @@ import { Validator } from '../../pipes/validator.pipe'
     position: 'pre',
   },
 ])
+@Provide([
+  {
+    provide: '111',
+    useValue: 1,
+  },
+])
 export class HelloController {
-  @Inject()
+  @Inject('111')
   aa!: string
   constructor(
     private readonly helloService: HelloService,
-    @Inject() a: HelloService
+    @Inject() a: string
   ) {}
   @Get('/:a')
   @Middleware([
@@ -74,7 +81,7 @@ export class HelloController {
     )
     a: number
   ) {
-    return a
+    return this.helloService.hello()
   }
   @Post('/')
   helloPost(

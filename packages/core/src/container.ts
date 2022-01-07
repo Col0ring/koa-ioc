@@ -1,12 +1,6 @@
 import { isClass, isUndefined, Creator } from '@koa-ioc/misc'
-import { Decorator, Metadata } from './constants'
-import {
-  Provider,
-  ClassProvider,
-  ValueProvider,
-  FactoryProvider,
-  ParamsInjectMetadata,
-} from './type'
+import { Provider, ClassProvider, ValueProvider, FactoryProvider } from './type'
+import { createInstance } from './utils'
 
 export class Container {
   private provides = new Map<any, Provider>()
@@ -24,17 +18,9 @@ export class Container {
   }
 
   private createClassInstance<T>(creator: Creator<T>): T {
-    // get Services
-    const params: any[] = Reflect.getMetadata(Metadata.Params, creator) || []
-    const injects: ParamsInjectMetadata =
-      Reflect.getMetadata(Decorator.ParamsInject, creator) || []
-    const args = params.map((param, index) => {
-      const token = injects[index]
-      // 默认使用当前类型
-      return this.inject(token || param)
-    })
-
-    return Reflect.construct(creator, args)
+    return createInstance(creator, (param, token) =>
+      this.inject(token || param)
+    )
   }
 
   provide<T>(provider: Provider<T>) {

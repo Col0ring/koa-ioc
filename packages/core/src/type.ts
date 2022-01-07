@@ -18,6 +18,8 @@ export interface MethodConfig {
 }
 export type MethodMetadata = MethodConfig[]
 
+export type ProvideMetadata = Provider[]
+
 export interface PropertiesInjectConfig {
   key: string | symbol
   type: any

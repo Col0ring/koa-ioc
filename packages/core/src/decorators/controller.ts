@@ -5,12 +5,12 @@ import {
   isClass,
   isNumber,
   isString,
+  isUndefined,
 } from '@koa-ioc/misc'
 import { Decorator, Metadata, Method, MiddlewarePosition } from '../constants'
 import {
   CtxMetadata,
   ExceptionMetadata,
-  ParamsInjectMetadata,
   MethodMetadata,
   MiddlewareMetadata,
   NextMetadata,
@@ -18,8 +18,11 @@ import {
   PipeTransformer,
   ParamMetadata,
   Middlewares,
+  ProvideMetadata,
+  PropertiesInjectMetadata,
 } from '../type'
-import { isInjectable } from '../utils'
+import { createInstance } from '../utils'
+import container, { Container } from '../container'
 
 const pipeClassCacheMap = new Map<Creator<PipeTransformer>, PipeTransformer>()
 
@@ -40,32 +43,37 @@ function getMiddlewares(middlewareMetadata: MiddlewareMetadata): Middlewares {
   )
 }
 
-function createInstance<T>(creator: Creator<T>): T {
-  // get Services
-  const params: any[] = Reflect.getMetadata(Metadata.Params, creator) || []
-  const injects: ParamsInjectMetadata =
-    Reflect.getMetadata(Decorator.ParamsInject, creator) || []
-  const args = params.map((param, index) => {
-    const inject = injects[index]
-    if (isInjectable(inject)) {
-      return createInstance(inject)
-    }
-    if (isInjectable(param)) {
-      return createInstance(param)
-    }
-    return inject
-  })
-
-  return Reflect.construct(creator, args)
-}
-
 export function Controller(prefix = ''): TargetFunction {
   return function (target) {
     const router = new KoaRouter({
       prefix,
     })
 
-    const controller = createInstance(target)
+    const provideMetadata: ProvideMetadata =
+      Reflect.getMetadata(Decorator.Provide, target) || []
+    const controllerContainer = new Container()
+    provideMetadata.forEach((provider) => controllerContainer.provide(provider))
+    const controller = createInstance(target, (param, token) => {
+      const type = token || param
+      const injectValue = controllerContainer.inject(type)
+      if (!isUndefined(injectValue)) {
+        return injectValue
+      }
+      return container.inject(type)
+    })
+
+    const propertiesInjectMetadata: PropertiesInjectMetadata =
+      Reflect.getMetadata(Decorator.PropertiesInject, target) || []
+
+    propertiesInjectMetadata.forEach(({ key, type }) => {
+      const injectValue = controllerContainer.inject(type)
+      if (!isUndefined(injectValue)) {
+        controller[key] = injectValue
+      } else {
+        controller[key] = container.inject(type)
+      }
+    })
+
     const controllerMiddlewareMetadata: MiddlewareMetadata =
       Reflect.getMetadata(Decorator.Middleware, target) || []
     const controllerExceptionMetadata: ExceptionMetadata =
