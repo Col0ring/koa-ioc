@@ -8,6 +8,10 @@ export function isError(val: any): val is Error {
   return val instanceof Error
 }
 
+export function isUndefined(val: any): val is undefined {
+  return typeof val === 'undefined'
+}
+
 export function isFunction(val: any): val is Function {
   return typeof val === 'function'
 }

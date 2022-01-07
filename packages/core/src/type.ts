@@ -17,9 +17,14 @@ export interface MethodConfig {
   name: string
 }
 export type MethodMetadata = MethodConfig[]
-export interface InjectMetadata {
-  [index: number]: any
+
+export interface PropertiesInjectConfig {
+  key: string | symbol
+  type: any
 }
+export type PropertiesInjectMetadata = PropertiesInjectConfig[]
+
+export type ParamsInjectMetadata = any[]
 
 export interface ArgumentMetadata {
   readonly metatype: any
@@ -56,6 +61,27 @@ export interface ParamConfig {
 }
 export type ParamMetadata = ParamConfig[]
 
+interface BaseProvider {
+  provide: any
+}
+
+export interface ClassProvider<T> extends BaseProvider {
+  useClass: Creator<T>
+}
+
+export interface ValueProvider<T> extends BaseProvider {
+  useValue: T
+}
+
+export interface FactoryProvider<T> extends BaseProvider {
+  useFactory: () => T
+}
+
+export type Provider<T = any> =
+  | ClassProvider<T>
+  | ValueProvider<T>
+  | FactoryProvider<T>
+
 export interface Mixins {
   bootstrap(): this
   getControllerRouters(): KoaRouter[]
@@ -67,4 +93,5 @@ export interface Mixins {
   useBodyParser(options?: koaBody.IKoaBodyOptions): this
   usePrefix(prefix: string): this
   useSession(options?: Partial<koaSession.opts>): this
+  addProvider(providers: Provider | Provider[]): this
 }

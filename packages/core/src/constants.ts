@@ -4,8 +4,10 @@ export enum Metadata {
 export enum Decorator {
   Controller = 'controller',
   Method = 'method',
+  Provide = 'provide',
   Injectable = 'injectable',
-  Inject = 'inject',
+  ParamsInject = 'params-inject',
+  PropertiesInject = 'properties-inject',
   Middleware = 'middleware',
   Exception = 'exception',
   Ctx = 'ctx',

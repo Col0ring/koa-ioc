@@ -10,7 +10,7 @@ import { Decorator, Metadata, Method, MiddlewarePosition } from '../constants'
 import {
   CtxMetadata,
   ExceptionMetadata,
-  InjectMetadata,
+  ParamsInjectMetadata,
   MethodMetadata,
   MiddlewareMetadata,
   NextMetadata,
@@ -43,8 +43,8 @@ function getMiddlewares(middlewareMetadata: MiddlewareMetadata): Middlewares {
 function createInstance<T>(creator: Creator<T>): T {
   // get Services
   const params: any[] = Reflect.getMetadata(Metadata.Params, creator) || []
-  const injects: InjectMetadata =
-    Reflect.getMetadata(Decorator.Inject, creator) || []
+  const injects: ParamsInjectMetadata =
+    Reflect.getMetadata(Decorator.ParamsInject, creator) || []
   const args = params.map((param, index) => {
     const inject = injects[index]
     if (isInjectable(inject)) {
@@ -55,7 +55,8 @@ function createInstance<T>(creator: Creator<T>): T {
     }
     return inject
   })
-  return new creator(...args)
+
+  return Reflect.construct(creator, args)
 }
 
 export function Controller(prefix = ''): TargetFunction {

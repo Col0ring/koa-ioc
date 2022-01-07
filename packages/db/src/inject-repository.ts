@@ -1,10 +1,11 @@
 import { getConnection } from 'typeorm'
 import { Inject } from '@koa-ioc/core'
-import { Creator, TargetConstructorFunction } from '@koa-ioc/misc'
+import { TargetConstructorFunction } from '@koa-ioc/misc'
+import { EntityClassOrSchema } from './type'
 
 // Inject Repository Decorator
 export function InjectRepository(
-  entity: Creator,
+  entity: EntityClassOrSchema,
   connectionName?: string
 ): TargetConstructorFunction {
   return function (target, methodKey, index) {

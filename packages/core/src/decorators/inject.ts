@@ -1,20 +1,37 @@
-import { TargetConstructorFunction, isString } from '@koa-ioc/misc'
+import { isUndefined, Creator, TargetObject, isNumber } from '@koa-ioc/misc'
 import { Decorator } from '../constants'
-import { InjectMetadata } from '../type'
+import { ParamsInjectMetadata, PropertiesInjectMetadata } from '../type'
 
-export function Inject(value?: any): TargetConstructorFunction {
+export function Inject<T = any>(token?: T) {
   return function (
-    target,
+    target: Creator | TargetObject,
     // constructor
-    methodName,
-    index
+    key: string | symbol | undefined,
+    index?: number
   ) {
     // constructor
-    if (!isString(methodName)) {
-      const injects: InjectMetadata[] =
-        Reflect.getMetadata(Decorator.Inject, target) || []
-      injects[index] = value
-      Reflect.defineMetadata(Decorator.Inject, injects, target)
+    if (isUndefined(key)) {
+      if (!isNumber(index)) {
+        return
+      }
+      const params: ParamsInjectMetadata =
+        Reflect.getMetadata(Decorator.ParamsInject, target) || []
+      params[index] = token
+      Reflect.defineMetadata(Decorator.ParamsInject, params, target)
+      return
     }
+
+    const type = token || Reflect.getMetadata('design:type', target, key)
+    const properties: PropertiesInjectMetadata =
+      Reflect.getMetadata(Decorator.PropertiesInject, target.constructor) || []
+    properties.push({
+      key,
+      type,
+    })
+    Reflect.defineMetadata(
+      Decorator.PropertiesInject,
+      properties,
+      target.constructor
+    )
   }
 }

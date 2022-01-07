@@ -12,6 +12,7 @@ import {
   Req,
   Param,
   CustomParam,
+  Inject,
 } from '@koa-ioc/core'
 import { HttpException } from '@koa-ioc/exception'
 import { ValidateClassPipe, ValidatorIntegerPipe } from '@koa-ioc/pipe'
@@ -37,7 +38,12 @@ import { Validator } from '../../pipes/validator.pipe'
   },
 ])
 export class HelloController {
-  constructor(private readonly helloService: HelloService) {}
+  @Inject()
+  aa!: string
+  constructor(
+    private readonly helloService: HelloService,
+    @Inject() a: HelloService
+  ) {}
   @Get('/:a')
   @Middleware([
     {

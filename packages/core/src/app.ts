@@ -1,3 +1,4 @@
+import { ensureArray } from '@koa-ioc/misc'
 import Koa from 'koa'
 import path from 'path'
 import KoaRouter from '@koa/router'
@@ -7,6 +8,7 @@ import koaLogger from 'koa-logger'
 import koaSession from 'koa-session'
 import koaStatic from 'koa-static'
 import { Decorator } from './constants'
+import container from './container'
 import { Mixins } from './type'
 import { log } from './utils'
 
@@ -78,6 +80,12 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
           return this
         }
         globalPrefix = path.join(prefix, globalPrefix)
+        return this
+      },
+      addProvider(providers) {
+        ensureArray(providers).forEach((provider) => {
+          container.provide(provider)
+        })
         return this
       },
     },
