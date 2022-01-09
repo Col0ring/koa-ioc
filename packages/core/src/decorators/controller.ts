@@ -76,14 +76,14 @@ export function Controller(prefix = ''): TargetFunction {
         Reflect.getMetadata(Decorator.Exception, controller, key) ||
         ((_, next) => next())
       const ctxMetadata: CtxMetadata =
-        Reflect.getMetadata(Decorator.Ctx, controller, key) || []
+        Reflect.getMetadata(Decorator.Ctx, target, key) || []
       const nextMetadata: NextMetadata =
-        Reflect.getMetadata(Decorator.Next, controller, key) || []
+        Reflect.getMetadata(Decorator.Next, target, key) || []
 
       const pipeMetadata: PipeMetadata =
         Reflect.getMetadata(Decorator.Pipe, controller, key) || []
       const paramMetadata: ParamMetadata =
-        Reflect.getMetadata(Decorator.Param, controller, key) || []
+        Reflect.getMetadata(Decorator.Param, target, key) || []
 
       const params: any[] = Reflect.getMetadata(
         Metadata.Params,

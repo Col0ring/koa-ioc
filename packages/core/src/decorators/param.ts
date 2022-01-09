@@ -13,7 +13,8 @@ function createParamDecorator<T extends string>(paramPath: string) {
   ): TargetParamFunction {
     return function (target, methodName, index) {
       const paramMetadata: ParamMetadata =
-        Reflect.getMetadata(Decorator.Param, target, methodName) || []
+        Reflect.getMetadata(Decorator.Param, target.constructor, methodName) ||
+        []
       if (isString(name)) {
         paramMetadata.push({
           paramPath,
@@ -29,7 +30,12 @@ function createParamDecorator<T extends string>(paramPath: string) {
         Pipe(...(name ? [name] : []), ...pipes)(target, methodName, index)
       }
 
-      Reflect.defineMetadata(Decorator.Param, paramMetadata, target, methodName)
+      Reflect.defineMetadata(
+        Decorator.Param,
+        paramMetadata,
+        target.constructor,
+        methodName
+      )
     }
   }
   return ParamDecorator

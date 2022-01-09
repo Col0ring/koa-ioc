@@ -6,9 +6,15 @@ export function Next(): TargetParamFunction {
   return function (target, methodName, index) {
     if (isString(methodName)) {
       const nextMetadata: NextMetadata =
-        Reflect.getMetadata(Decorator.Next, target, methodName) || []
+        Reflect.getMetadata(Decorator.Next, target.constructor, methodName) ||
+        []
       nextMetadata.push(index)
-      Reflect.defineMetadata(Decorator.Next, nextMetadata, target, methodName)
+      Reflect.defineMetadata(
+        Decorator.Next,
+        nextMetadata,
+        target.constructor,
+        methodName
+      )
     }
   }
 }
