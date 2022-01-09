@@ -11,10 +11,14 @@ export enum Decorator {
   ParamsInject = 'ioc:params-inject',
   PropertiesInject = 'ioc:properties-inject',
   Middleware = 'ioc:middleware',
+  MethodMiddleware = 'ioc:method-middleware',
   Exception = 'ioc:exception',
+  MethodException = 'ioc:method-exception',
   Ctx = 'ioc:ctx',
   Next = 'ioc:next',
   Pipe = 'ioc:pipe',
+  MethodPipe = 'ioc:method-pipe',
+  // ctx Params
   Param = 'ioc:param',
 }
 

@@ -26,12 +26,16 @@ export function Middleware(
 
     if (isString(methodName)) {
       const middlewareMetaData: MiddlewareMetadata =
-        Reflect.getMetadata(Decorator.Middleware, target, methodName) || []
+        Reflect.getMetadata(
+          Decorator.Middleware,
+          target.constructor,
+          methodName
+        ) || []
       middlewareMetaData.push(...middlewares)
       Reflect.defineMetadata(
         Decorator.Middleware,
         middlewareMetaData,
-        target,
+        target.constructor,
         methodName
       )
     } else {

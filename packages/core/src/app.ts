@@ -7,8 +7,8 @@ import koaCors from '@koa/cors'
 import koaLogger from 'koa-logger'
 import koaSession from 'koa-session'
 import koaStatic from 'koa-static'
-import { Decorator } from './constants'
 import globalContainer from './container'
+import { generateRouter } from './generateRouter'
 import { Mixins } from './type'
 import { log } from './utils'
 
@@ -37,10 +37,7 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
       },
       useControllers(controllers) {
         controllers.forEach((controller) => {
-          const router: KoaRouter = Reflect.getMetadata(
-            Decorator.Controller,
-            controller
-          )
+          const router = generateRouter(controller)
           if (!router) {
             return
           }

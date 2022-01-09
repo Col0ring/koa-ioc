@@ -1,6 +1,29 @@
-import { Creator, TargetObject, isNumber, isString } from '@koa-ioc/misc'
+import {
+  Creator,
+  TargetObject,
+  isNumber,
+  isString,
+  isClass,
+} from '@koa-ioc/misc'
 import { Decorator } from '../constants'
-import { PipeOptions, PipeMetadata } from '../type'
+import { PipeOptions, PipeMetadata, PipeTransformer } from '../type'
+
+const pipeClassCacheMap = new Map<Creator<PipeTransformer>, PipeTransformer>()
+
+function getPipeInstance(pipe: PipeOptions) {
+  let instance: PipeTransformer
+  if (isClass(pipe)) {
+    if (pipeClassCacheMap.has(pipe)) {
+      instance = pipeClassCacheMap.get(pipe)!
+    } else {
+      instance = new pipe()
+      pipeClassCacheMap.set(pipe, instance)
+    }
+  } else {
+    instance = pipe
+  }
+  return instance
+}
 
 export function Pipe(...pipes: PipeOptions[]) {
   return function (
@@ -11,22 +34,36 @@ export function Pipe(...pipes: PipeOptions[]) {
     // method, method params
     if (isString(methodName)) {
       const pipeMetadata: PipeMetadata =
-        Reflect.getMetadata(Decorator.Pipe, target, methodName) || []
+        Reflect.getMetadata(
+          Decorator.MethodPipe,
+          target.constructor,
+          methodName
+        ) || []
       if (isNumber(index)) {
         pipeMetadata.push(
           ...pipes.map((pipe) => ({
             index,
-            pipe,
+            pipe: getPipeInstance(pipe),
           }))
         )
-        Reflect.defineMetadata(Decorator.Pipe, pipeMetadata, target, methodName)
+        Reflect.defineMetadata(
+          Decorator.MethodPipe,
+          pipeMetadata,
+          target.constructor,
+          methodName
+        )
       } else {
         pipeMetadata.push(
           ...pipes.map((pipe) => ({
-            pipe,
+            pipe: getPipeInstance(pipe),
           }))
         )
-        Reflect.defineMetadata(Decorator.Pipe, pipeMetadata, target, methodName)
+        Reflect.defineMetadata(
+          Decorator.MethodPipe,
+          pipeMetadata.constructor,
+          target,
+          methodName
+        )
       }
 
       // class
@@ -35,7 +72,7 @@ export function Pipe(...pipes: PipeOptions[]) {
         Reflect.getMetadata(Decorator.Pipe, target) || []
       pipeMetadata.push(
         ...pipes.map((pipe) => ({
-          pipe,
+          pipe: getPipeInstance(pipe),
         }))
       )
       Reflect.defineMetadata(Decorator.Pipe, pipeMetadata, target)

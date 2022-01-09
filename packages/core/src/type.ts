@@ -55,7 +55,7 @@ export type CtxMetadata = number[]
 export type NextMetadata = number[]
 export type PipeOptions = PipeTransformer | Creator<PipeTransformer>
 export interface PipeConfig {
-  pipe: PipeOptions
+  pipe: PipeTransformer
   index?: number
 }
 export type PipeMetadata = PipeConfig[]
