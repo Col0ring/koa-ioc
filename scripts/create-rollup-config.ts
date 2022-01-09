@@ -56,7 +56,12 @@ export async function createConfig(dir: string) {
     {
       input: path.resolve(dir, './dist/types/index.d.ts'),
       external: [...Object.keys(pkg.dependencies || {}), /^@koa-ioc\//],
-      output: [{ file: path.resolve(dir, './dist/index.d.ts'), format: 'es' }],
+      output: [
+        {
+          file: path.resolve(dir, './dist/index.d.ts'),
+          format: 'es',
+        },
+      ],
       plugins: [dts()],
     },
   ])
