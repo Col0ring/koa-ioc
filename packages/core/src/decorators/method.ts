@@ -6,13 +6,17 @@ function createMethodDecorator(method: Method) {
   return function (path = ''): TargetMethodFunction {
     return function (target, methodName) {
       const methodMetadata: MethodMetadata =
-        Reflect.getMetadata(Decorator.Method, target) || []
+        Reflect.getMetadata(Decorator.Method, target.constructor) || []
       methodMetadata.push({
         path,
         method,
         name: methodName,
       })
-      Reflect.defineMetadata(Decorator.Method, methodMetadata, target)
+      Reflect.defineMetadata(
+        Decorator.Method,
+        methodMetadata,
+        target.constructor
+      )
     }
   }
 }

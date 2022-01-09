@@ -5,7 +5,6 @@ import {
   isClass,
   isNumber,
   isString,
-  isUndefined,
 } from '@koa-ioc/misc'
 import { Decorator, Metadata, Method, MiddlewarePosition } from '../constants'
 import {
@@ -18,12 +17,8 @@ import {
   PipeTransformer,
   ParamMetadata,
   Middlewares,
-  ProvideMetadata,
-  PropertiesInjectMetadata,
-  ControllerMetadata,
 } from '../type'
-import { createInstance } from '../utils'
-import container, { Container } from '../container'
+import { createInstance } from '../createInstance'
 
 const pipeClassCacheMap = new Map<Creator<PipeTransformer>, PipeTransformer>()
 
@@ -43,7 +38,6 @@ function getMiddlewares(middlewareMetadata: MiddlewareMetadata): Middlewares {
     }
   )
 }
-
 export function Controller(prefix = ''): TargetFunction {
   return function (target) {
     // const controllerMetadata: ControllerMetadata = {
@@ -56,30 +50,7 @@ export function Controller(prefix = ''): TargetFunction {
       prefix,
     })
 
-    const provideMetadata: ProvideMetadata =
-      Reflect.getMetadata(Decorator.Provide, target) || []
-    const controllerContainer = new Container()
-    provideMetadata.forEach((provider) => controllerContainer.provide(provider))
-    const controller = createInstance(target, (param, token) => {
-      const type = token || param
-      const injectValue = controllerContainer.inject(type)
-      if (!isUndefined(injectValue)) {
-        return injectValue
-      }
-      return container.inject(type)
-    })
-
-    const propertiesInjectMetadata: PropertiesInjectMetadata =
-      Reflect.getMetadata(Decorator.PropertiesInject, target) || []
-
-    propertiesInjectMetadata.forEach(({ key, type }) => {
-      const injectValue = controllerContainer.inject(type)
-      if (!isUndefined(injectValue)) {
-        controller[key] = injectValue
-      } else {
-        controller[key] = container.inject(type)
-      }
-    })
+    const controller = createInstance(target)
 
     const controllerMiddlewareMetadata: MiddlewareMetadata =
       Reflect.getMetadata(Decorator.Middleware, target) || []
@@ -91,13 +62,12 @@ export function Controller(prefix = ''): TargetFunction {
       postMiddlewares: postControllerMiddlewares,
     } = getMiddlewares(controllerMiddlewareMetadata)
 
-    const controllerPipeMetadata: PipeMetadata =
-      Reflect.getMetadata(Decorator.Pipe, target) || []
-
     const methodMetadata: MethodMetadata = Reflect.getMetadata(
       Decorator.Method,
-      controller
+      target
     )
+    const controllerPipeMetadata: PipeMetadata =
+      Reflect.getMetadata(Decorator.Pipe, target) || []
 
     methodMetadata.forEach(({ method, path, name: key }) => {
       const middlewareMetadata: MiddlewareMetadata =

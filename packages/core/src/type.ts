@@ -22,6 +22,8 @@ export interface ControllerMetadata {
 }
 export type ProvideMetadata = Provider[]
 
+export type ImportMetadata = Creator[]
+
 export interface PropertiesInjectConfig {
   key: string | symbol
   type: any

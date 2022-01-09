@@ -1,6 +1,6 @@
-import { isClass, isUndefined, Creator } from '@koa-ioc/misc'
+import { isClass, isUndefined } from '@koa-ioc/misc'
 import { Provider, ClassProvider, ValueProvider, FactoryProvider } from './type'
-import { createInstance } from './utils'
+import { createInstance } from './createInstance'
 
 export class Container {
   private provides = new Map<any, Provider>()
@@ -17,23 +17,23 @@ export class Container {
     return isUndefined((provider as FactoryProvider<T>).useFactory)
   }
 
-  private createClassInstance<T>(creator: Creator<T>): T {
-    return createInstance(creator, (param, token) =>
-      this.inject(token || param)
-    )
-  }
-
   provide<T>(provider: Provider<T>) {
     this.provides.set(provider.provide, provider)
   }
-  inject(token: any) {
+  inject(token: any, parentContainers: Container[] = []): any {
     const provider = this.provides.get(token)
     if (!provider) {
+      for (const parentContainer of parentContainers) {
+        const provide = parentContainer.inject(token)
+        if (!isUndefined(provide)) {
+          return provide
+        }
+      }
       return
     }
     if (this.isClass(provider)) {
       const target = provider.useClass
-      return this.createClassInstance(target)
+      return createInstance(target, [this, ...parentContainers])
     } else if (this.isValue(provider)) {
       return provider.useValue
     } else if (this.isFactory(provider)) {
@@ -43,5 +43,5 @@ export class Container {
 }
 
 // global container
-const container = new Container()
-export default container
+const globalContainer = new Container()
+export default globalContainer

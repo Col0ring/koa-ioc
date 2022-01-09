@@ -8,7 +8,7 @@ import koaLogger from 'koa-logger'
 import koaSession from 'koa-session'
 import koaStatic from 'koa-static'
 import { Decorator } from './constants'
-import container from './container'
+import globalContainer from './container'
 import { Mixins } from './type'
 import { log } from './utils'
 
@@ -84,7 +84,7 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
       },
       addProvider(providers) {
         ensureArray(providers).forEach((provider) => {
-          container.provide(provider)
+          globalContainer.provide(provider)
         })
         return this
       },

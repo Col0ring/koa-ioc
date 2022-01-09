@@ -4,6 +4,7 @@ export enum Metadata {
 }
 export enum Decorator {
   Controller = 'ioc:controller',
+  Import = 'ioc:import',
   Method = 'ioc:method',
   Provide = 'ioc:provide',
   Injectable = 'ioc:injectable',
