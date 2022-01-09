@@ -42,6 +42,7 @@ export enum ParamPath {
   Cookies = 'cookies',
   Session = 'session',
   Body = 'request.body',
+  File = 'request.file',
   Files = 'request.files',
 }
 

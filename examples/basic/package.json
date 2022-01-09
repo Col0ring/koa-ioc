@@ -5,6 +5,7 @@
     "dev:source": "cross-env USE_SOURCE=true nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts"
   },
   "devDependencies": {
+    "@types/koa__multer": "^2.0.4",
     "@types/module-alias": "^2.0.1",
     "cross-env": "^7.0.3",
     "module-alias": "^2.2.2",
@@ -14,13 +15,16 @@
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",
+    "@koa/multer": "^3.0.0",
     "@koa/router": "^10.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "dayjs": "^1.10.7",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-body": "^4.2.0",
     "koa-static": "^5.0.0",
+    "multer": "^1.4.4",
     "typeorm": "^0.2.41"
   }
 }

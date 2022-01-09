@@ -8,7 +8,7 @@ import {
   Pipe,
   Middleware,
   Body,
-  UploadFiles,
+  UploadedFiles,
   Post,
   Req,
   Param,
@@ -89,7 +89,7 @@ export class HelloController {
   helloPost(
     @Ctx() ctx: Context,
     @Req() req: Request,
-    @UploadFiles() file: any,
+    @UploadedFiles() file: any,
     @Body() body: any
   ) {
     return {
