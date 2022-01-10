@@ -1,6 +1,6 @@
 {
   "name": "koa-ioc",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "workspaces": [
@@ -12,6 +12,7 @@
     "commit-msg:commitlint": "commitlint --config commitlint.config.js -e $HUSKY_GIT_PARAMS",
     "init": "yarn install && yarn run build",
     "version": "lerna version --no-changelog --no-push --no-git-tag-version",
+    "prerelease": "yarn run build",
     "release": "lerna publish from-package --dist-tag latest",
     "build": "lerna run --stream --sort build",
     "lint": "npm run lint:eslint && npm run lint:prettier",

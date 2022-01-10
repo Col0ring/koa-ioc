@@ -1,6 +1,6 @@
 {
   "name": "@koa-ioc/auth",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
@@ -8,20 +8,21 @@
     "build": "ts-node ../../scripts/build.ts --package auth"
   },
   "peerDependencies": {
-    "koa": "^2.13.4",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.4"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@koa-ioc/core": "1.0.0",
-    "@koa-ioc/exception": "1.0.0",
-    "@koa-ioc/misc": "1.0.0"
+    "@babel/runtime": "^7.16.7",
+    "@koa-ioc/core": "^0.0.1",
+    "@koa-ioc/exception": "^0.0.1",
+    "@koa-ioc/misc": "^0.0.1"
   },
   "devDependencies": {
-    "koa": "^2.13.4",
+    "@types/jsonwebtoken": "^8.5.6",
     "jsonwebtoken": "^8.5.1",
-    "@types/jsonwebtoken": "^8.5.6"
+    "koa": "^2.13.4"
   }
 }
