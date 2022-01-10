@@ -12,7 +12,12 @@
   },
   "dependencies": {
     "@koa-ioc/core": "^1.0.0",
-    "@koa-ioc/misc": "^1.0.0",
+    "@koa-ioc/misc": "^1.0.0"
+  },
+  "devDependencies": {
+    "typeorm": "^0.2.41"
+  },
+  "peerDependencies": {
     "typeorm": "^0.2.41"
   }
 }

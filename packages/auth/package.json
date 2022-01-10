@@ -8,7 +8,8 @@
     "build": "ts-node ../../scripts/build.ts --package auth"
   },
   "peerDependencies": {
-    "koa": "^2.13.4"
+    "koa": "^2.13.4",
+    "jsonwebtoken": "^8.5.1"
   },
   "publishConfig": {
     "access": "public"
@@ -16,10 +17,11 @@
   "dependencies": {
     "@koa-ioc/core": "1.0.0",
     "@koa-ioc/exception": "1.0.0",
-    "@koa-ioc/misc": "1.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "@koa-ioc/misc": "1.0.0"
   },
   "devDependencies": {
+    "koa": "^2.13.4",
+    "jsonwebtoken": "^8.5.1",
     "@types/jsonwebtoken": "^8.5.6"
   }
 }

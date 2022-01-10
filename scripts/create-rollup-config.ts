@@ -38,7 +38,11 @@ export async function createConfig(dir: string) {
         terser(),
         del({ targets: path.resolve(dir, './dist') }),
       ],
-      external: [...Object.keys(pkg.dependencies || {}), /^@koa-ioc\//],
+      external: [
+        ...Object.keys(pkg.dependencies || {}),
+        ...Object.keys(pkg.devDependencies || {}),
+        /^@koa-ioc\//,
+      ],
       output: [
         {
           file: path.resolve(dir, './dist/index.cjs.js'),

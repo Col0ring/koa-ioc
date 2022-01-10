@@ -13,7 +13,13 @@
   "dependencies": {
     "@koa-ioc/core": "1.0.0",
     "@koa-ioc/exception": "1.0.0",
-    "@koa-ioc/misc": "1.0.0",
+    "@koa-ioc/misc": "1.0.0"
+  },
+  "devDependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2"
+  },
+  "peerDependencies": {
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2"
   }
