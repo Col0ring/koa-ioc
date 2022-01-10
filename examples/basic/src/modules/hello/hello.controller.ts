@@ -5,21 +5,16 @@ import {
   Exception,
   Provide,
   Get,
-  Pipe,
   Middleware,
   Body,
-  UploadedFiles,
   Post,
   Req,
   Param,
-  CustomParam,
   Inject,
   Import,
 } from '@koa-ioc/core'
-import { HttpException } from '@koa-ioc/exception'
-import { ValidateClassPipe, ValidatorIntegerPipe } from '@koa-ioc/pipe'
+import { ValidatorIntegerPipe } from '@koa-ioc/pipe'
 import { HelloService } from './hello.service'
-import { Validator } from '../../pipes/validator.pipe'
 
 @Controller('/example')
 // @Pipe(ValidateClassPipe)
@@ -86,16 +81,10 @@ export class HelloController {
     return this.helloService.hello()
   }
   @Post('/')
-  helloPost(
-    @Ctx() ctx: Context,
-    @Req() req: Request,
-    @UploadedFiles() file: any,
-    @Body() body: any
-  ) {
+  helloPost(@Ctx() ctx: Context, @Req() req: Request, @Body() body: any) {
     return {
       code: 200,
       body,
-      file,
     }
   }
 }

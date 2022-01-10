@@ -18,10 +18,20 @@ export function isController(val: any): boolean {
   return !!controllerMetadata?.controller
 }
 
+function success(message: string) {
+  console.log(chalk.greenBright(message))
+}
+
 function warn(message: string) {
   console.warn(chalk.yellowBright(message))
 }
 
+function error(message: string) {
+  console.error(chalk.redBright(message))
+}
+
 export const log = {
+  success,
   warn,
+  error,
 }
