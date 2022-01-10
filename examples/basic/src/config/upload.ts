@@ -1,19 +1,28 @@
 import multer from '@koa/multer'
 import { pseudoRandomBytes } from 'crypto'
+import fs from 'fs'
+import path from 'path'
 import dayjs from 'dayjs'
 
 const storage = multer.diskStorage({
-  destination: `uploads/${dayjs().format('YYYY-MM-DD')}`,
+  destination: 'uploads',
   filename(_, file, cb) {
     pseudoRandomBytes(16, (err, raw) => {
+      const date = dayjs().format('YYYY-MM-DD')
+      const folder = path.resolve(__dirname, `../../uploads/${date}`)
+      if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder)
+      }
+
       try {
         cb(
           err,
-          raw.toString('hex') +
-            file.originalname.substring(file.originalname.lastIndexOf('.'))
+          `${date}/${raw.toString('hex')}${file.originalname.substring(
+            file.originalname.lastIndexOf('.')
+          )}`
         )
       } catch (error: any) {
-        cb(error, Date.now().toString() + '-' + file.originalname)
+        cb(error, `${date}/${Date.now().toString()}-${file.originalname}`)
       }
     })
   },

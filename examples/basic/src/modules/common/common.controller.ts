@@ -25,15 +25,22 @@ export class CommonController {
     }
   })
   @Middleware(upload.single('file'))
-  uploadFile(@UploadedFile() file: multer.File, @Ctx() ctx: Context) {
+  uploadFile(@UploadedFile() file: multer.File, @Body() body: any) {
     return {
       file,
-      body: ctx.request.body,
+      body,
     }
   }
 
   @Post('/upload/files')
   @Middleware(upload.array('files'))
+  @Exception(async (ctx, next) => {
+    try {
+      await next()
+    } catch (error) {
+      ctx.body = 'error'
+    }
+  })
   uploadFiles(@UploadedFiles() files: multer.File[], @Ctx() ctx: Context) {
     return {
       files,
