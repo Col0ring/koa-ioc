@@ -61,6 +61,7 @@ export class HelloController {
     try {
       await next()
     } catch (error: any) {
+      console.log(error)
       ctx.body = error.toJSON()
     }
   })

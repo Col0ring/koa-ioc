@@ -65,10 +65,12 @@ export function generateRouter(controller: Creator): KoaRouter | null {
 
     const pipeMetadata: PipeMetadata =
       Reflect.getMetadata(Decorator.MethodPipe, controller, key) || []
+
     const paramMetadata: ParamMetadata =
       Reflect.getMetadata(Decorator.Param, controller, key) || []
 
-    const params: any[] = Reflect.getMetadata(Metadata.Params, controller, key)
+    const params: any[] = Reflect.getMetadata(Metadata.Params, instance, key)
+
     const hasNextHandler = nextMetadata.length !== 0
     const { preMiddlewares, postMiddlewares } =
       getMiddlewares(middlewareMetadata)
@@ -84,7 +86,6 @@ export function generateRouter(controller: Creator): KoaRouter | null {
 
       ctxMetadata.forEach((index) => (handlerArgs[index] = ctx))
       nextMetadata.forEach((index) => (handlerArgs[index] = next))
-
       // pipe
       async function pipeTransform(pipe: PipeTransformer, index?: number) {
         if (isNumber(index)) {
