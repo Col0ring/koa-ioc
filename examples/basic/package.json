@@ -2,6 +2,7 @@
   "name": "basic",
   "scripts": {
     "dev": "nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts",
+    "build": "tsc -p ./tsconfig.json",
     "dev:source": "cross-env USE_SOURCE=true nodemon -w ../../packages -w ./src --exec ts-node ./src/index.ts"
   },
   "devDependencies": {

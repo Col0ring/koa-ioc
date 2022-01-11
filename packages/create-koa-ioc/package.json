@@ -1,0 +1,16 @@
+{
+  "name": "create-koa-ioc",
+  "version": "0.0.1",
+  "main": "./bin/index.js",
+  "bin": {
+    "create-koa-ioc": "./bind/index.js",
+    "kioc": "./bin/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "ts-node ../../scripts/build.ts --package create-koa-ioc"
+  },
+  "dependencies": {}
+}
