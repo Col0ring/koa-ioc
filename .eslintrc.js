@@ -8,6 +8,7 @@ module.exports = {
     node: true,
   },
   root: true,
+  parser: '@babel/eslint-parser',
   extends: [
     'eslint:recommended',
     'plugin:eslint-comments/recommended',
@@ -77,6 +78,7 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/ban-types': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
         // no any
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-unsafe-argument': 'off',

@@ -1,4 +1,3 @@
 import { Controller } from '@koa-ioc/core'
-
-// @Controller('/post')
+@Controller('/post')
 export class PostController {}

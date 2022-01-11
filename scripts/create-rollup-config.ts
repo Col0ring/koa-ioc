@@ -9,6 +9,8 @@ import eslint from 'rollup-plugin-eslint2'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import del from 'rollup-plugin-delete'
+// @ts-expect-error
+import babelConfig from '../babel.config'
 const extensions = ['.ts', '.js', '.json']
 export async function createConfig(dir: string) {
   const pkg = (await import(`${path.resolve(dir, './package.json')}`)).default
@@ -25,15 +27,7 @@ export async function createConfig(dir: string) {
           tsconfig: path.resolve(dir, './tsconfig.json'),
         }),
         getBabelOutputPlugin({
-          presets: [['@babel/preset-env', { modules: false }]],
-          plugins: [
-            [
-              '@babel/plugin-transform-runtime',
-              {
-                useESModules: false,
-              },
-            ],
-          ],
+          ...babelConfig,
         }),
         json(),
         commonjs(),
