@@ -47,6 +47,7 @@ export async function createConfig(dir: string) {
         ...Object.keys(pkg.dependencies || {}),
         ...Object.keys(pkg.devDependencies || {}),
         /^@koa-ioc\//,
+        /@babel\/runtime/,
       ],
       output: [
         {

@@ -15,7 +15,7 @@
     "prerelease": "yarn run build",
     "release": "lerna publish from-package --dist-tag latest",
     "build": "lerna run --stream --sort build",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint": "yarn run lint:eslint && yarn run lint:prettier",
     "lint:prettier": "prettier --write --no-error-on-unmatched-pattern **/*.{ts,js,json,yml,yaml,md}",
     "lint:eslint": "eslint --fix -c .eslintrc.js --ext .ts,.js .",
     "commit": "cz",
