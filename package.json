@@ -6,6 +6,20 @@
   "workspaces": [
     "packages/*"
   ],
+  "author": {
+    "name": "Col0ring",
+    "email": "1561999073@qq.com"
+  },
+  "keywords": [
+    "koa",
+    "ioc",
+    "typescript"
+  ],
+  "homepage": "https://github.com/Col0ring/koa-ioc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Col0ring/koa-ioc.git"
+  },
   "scripts": {
     "prepare": "husky install",
     "pre-commit:lint-staged": "lint-staged",

@@ -4,6 +4,20 @@
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
+  "author": {
+    "name": "Col0ring",
+    "email": "1561999073@qq.com"
+  },
+  "keywords": [
+    "koa",
+    "ioc",
+    "typescript"
+  ],
+  "homepage": "https://github.com/Col0ring/koa-ioc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Col0ring/koa-ioc.git"
+  },
   "publishConfig": {
     "access": "public"
   },
