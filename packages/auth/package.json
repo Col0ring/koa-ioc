@@ -1,6 +1,6 @@
 {
   "name": "@koa-ioc/auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.16.7",
-    "@koa-ioc/core": "^0.0.1",
-    "@koa-ioc/exception": "^0.0.1",
-    "@koa-ioc/misc": "^0.0.1"
+    "@koa-ioc/core": "^0.0.2",
+    "@koa-ioc/exception": "^0.0.2",
+    "@koa-ioc/misc": "^0.0.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.6",

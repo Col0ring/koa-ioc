@@ -1,6 +1,6 @@
 {
   "name": "koa-ioc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "license": "MIT",
   "workspaces": [
@@ -23,8 +23,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "^7.16.5",
-    "@babel/plugin-proposal-decorators": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.16.4",
     "@commitlint/cli": "^15.0.0",

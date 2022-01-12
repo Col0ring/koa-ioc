@@ -8,7 +8,6 @@ module.exports = {
     node: true,
   },
   root: true,
-  parser: '@babel/eslint-parser',
   extends: [
     'eslint:recommended',
     'plugin:eslint-comments/recommended',
