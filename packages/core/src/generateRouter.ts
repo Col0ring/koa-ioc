@@ -1,5 +1,6 @@
 import { Creator, isNumber, isString } from '@koa-ioc/misc'
 import { Middleware } from 'koa'
+import path from 'path'
 import KoaRouter from '@koa/router'
 import { createInstance } from './createInstance'
 import { isController, log } from './utils'
@@ -29,7 +30,7 @@ export function generateRouter(controller: Creator): KoaRouter | null {
   )
 
   const router = new KoaRouter({
-    prefix,
+    prefix: prefix ? path.join('/', prefix) : prefix,
   })
 
   const instance = createInstance(controller)
@@ -45,14 +46,12 @@ export function generateRouter(controller: Creator): KoaRouter | null {
     postMiddlewares: postControllerMiddlewares,
   } = getMiddlewares(controllerMiddlewareMetadata)
 
-  const methodMetadata: MethodMetadata = Reflect.getMetadata(
-    Decorator.Method,
-    controller
-  )
+  const methodMetadata: MethodMetadata =
+    Reflect.getMetadata(Decorator.Method, controller) || []
   const controllerPipeMetadata: PipeMetadata =
     Reflect.getMetadata(Decorator.Pipe, controller) || []
 
-  methodMetadata.forEach(({ method, path, name: key }) => {
+  methodMetadata.forEach(({ method, path: pathname, name: key }) => {
     const middlewareMetadata: MiddlewareMetadata =
       Reflect.getMetadata(Decorator.MethodMiddleware, controller, key) || []
     const exceptionMetadata: ExceptionMetadata =
@@ -116,7 +115,7 @@ export function generateRouter(controller: Creator): KoaRouter | null {
     }
 
     router[method.toLowerCase() as Method](
-      path,
+      path.join('/', pathname),
       controllerExceptionMetadata,
       exceptionMetadata,
       ...preControllerMiddlewares,

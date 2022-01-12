@@ -16,7 +16,7 @@ import {
 import { ValidatorIntegerPipe } from '@koa-ioc/pipe'
 import { HelloService } from './hello.service'
 
-@Controller('/example')
+@Controller('a')
 // @Pipe(ValidateClassPipe)
 @Exception(async (ctx, next) => {
   try {
@@ -48,7 +48,7 @@ export class HelloController {
     private readonly helloService: HelloService,
     @Inject('111') a: string
   ) {}
-  @Get('/:a')
+  @Get('//')
   @Middleware([
     {
       middleware: async function (ctx, next) {
@@ -65,20 +65,7 @@ export class HelloController {
       ctx.body = error.toJSON()
     }
   })
-  hello(
-    @Ctx() ctx: Context,
-    @Param(
-      'a',
-      new ValidatorIntegerPipe({
-        async onError(error, next) {
-          await error
-          error.message = 12
-          next(error)
-        },
-      })
-    )
-    a: number
-  ) {
+  hello(@Ctx() ctx: Context, a: number) {
     return this.helloService.hello()
   }
   @Post('/')
