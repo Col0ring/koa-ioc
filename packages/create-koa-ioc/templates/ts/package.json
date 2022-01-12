@@ -2,6 +2,7 @@
   "name": "@koa-ioc/create-app-ts-example",
   "version": "0.0.0",
   "scripts": {
+    "dev": "nodemon --exec ts-node ./src/index.ts",
     "build": "tsc -b"
   },
   "dependencies": {}
