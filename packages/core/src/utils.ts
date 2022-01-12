@@ -8,9 +8,6 @@ export function isInjectable(val: any): boolean {
 }
 
 export function isController(val: any): boolean {
-  if (!isClass(val)) {
-    return false
-  }
   const controllerMetadata: ControllerMetadata = Reflect.getMetadata(
     Decorator.Controller,
     val
