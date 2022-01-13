@@ -1,4 +1,4 @@
-import { ensureArray } from '@koa-ioc/misc'
+import { ensureArray, Creator } from '@koa-ioc/misc'
 import Koa from 'koa'
 import path from 'path'
 import KoaRouter from '@koa/router'
@@ -16,12 +16,20 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
   const app = koaApp || new Koa()
   let globalPrefix = ''
   let isBootstrapped = false
+  let controllersCache: Creator[] = []
   const routers: KoaRouter[] = []
 
   return [
     app,
     {
       bootstrap() {
+        controllersCache.forEach((controller) => {
+          const router = generateRouter(controller)
+          if (!router) {
+            return
+          }
+          routers.push(router)
+        })
         routers.forEach((router) => {
           router.prefix(globalPrefix)
           app.use(router.routes()).use(router.allowedMethods())
@@ -36,13 +44,7 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
         return routers
       },
       useControllers(controllers) {
-        controllers.forEach((controller) => {
-          const router = generateRouter(controller)
-          if (!router) {
-            return
-          }
-          routers.push(router)
-        })
+        controllersCache = controllers
         return this
       },
       useLogger(...args) {

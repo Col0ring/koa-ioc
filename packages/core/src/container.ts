@@ -14,7 +14,7 @@ export class Container {
   }
 
   private isFactory<T>(provider: Provider<T>): provider is FactoryProvider<T> {
-    return isUndefined((provider as FactoryProvider<T>).useFactory)
+    return !isUndefined((provider as FactoryProvider<T>).useFactory)
   }
 
   provide<T>(provider: Provider<T>) {
@@ -31,6 +31,7 @@ export class Container {
       }
       return
     }
+
     if (this.isClass(provider)) {
       const target = provider.useClass
       return createInstance(target, [this, ...parentContainers])

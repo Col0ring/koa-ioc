@@ -30,7 +30,8 @@ export function isObject(val: any): val is object {
 export function isClass(val: any): val is Creator {
   return (
     typeof val === 'function' &&
-    /^class\s/.test(Function.prototype.toString.call(val))
+    !!val.prototype &&
+    !!val.prototype.constructor.name
   )
 }
 
