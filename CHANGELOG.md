@@ -1,3 +1,20 @@
+## [0.0.2](https://github.com/Col0ring/koa-ioc/compare/v0.0.1...v0.0.2) (2022-01-13)
+
+
+### Bug Fixes
+
+* container resolver ([a1f71d1](https://github.com/Col0ring/koa-ioc/commit/a1f71d1cb84783f3127efb262a1932de80ab6e17))
+* generate router ([91b573b](https://github.com/Col0ring/koa-ioc/commit/91b573b65dc7f1760018b281547fc1b55ad48b7b))
+
+
+### Features
+
+* add a simple way of writing class provider ([77e80c8](https://github.com/Col0ring/koa-ioc/commit/77e80c8ecad1a6fe73c632708cc12cbd45515ff2))
+* add create cli ([c224270](https://github.com/Col0ring/koa-ioc/commit/c2242706785f4038ab1e314f45eea37c506fd96a))
+* decorator define tool ([c04009f](https://github.com/Col0ring/koa-ioc/commit/c04009f217c3e13691bd3942d1b0d80e0dbdbee0))
+
+
+
 ## 0.0.1 (2022-01-11)
 
 ### Bug Fixes

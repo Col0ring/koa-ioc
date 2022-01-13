@@ -1,11 +1,11 @@
-import { Middleware } from 'koa'
+import { Context, Middleware } from 'koa'
 import KoaRouter from '@koa/router'
 import koaBody from 'koa-body'
 import KoaLogger from 'koa-logger'
 import koaSession from 'koa-session'
 import koaCors from '@koa/cors'
 import koaStatic from 'koa-static'
-import { Creator } from '@koa-ioc/misc'
+import { Creator, PromisifyValue } from '@koa-ioc/misc'
 import { Method } from './constants'
 
 export type Methods = Method | Capitalize<Method>
@@ -61,11 +61,20 @@ export interface PipeConfig {
 }
 export type PipeMetadata = PipeConfig[]
 
+export type ParamHandle<T = unknown> = (data: T, ctx: Context) => PromisifyValue
+
 export interface ParamConfig {
+  handle: ParamHandle<any>
+  index: number
+  data: any
+}
+
+export interface ParamPathConfig {
   paramPath: string
   index: number
   name?: string
 }
+
 export type ParamMetadata = ParamConfig[]
 
 interface BaseProvider {

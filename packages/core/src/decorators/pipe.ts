@@ -60,8 +60,8 @@ export function Pipe(...pipes: PipeOptions[]) {
         )
         Reflect.defineMetadata(
           Decorator.MethodPipe,
-          pipeMetadata.constructor,
-          target,
+          pipeMetadata,
+          target.constructor,
           methodName
         )
       }

@@ -7,11 +7,15 @@ import {
 } from './type'
 import globalContainer, { Container } from './container'
 import { Decorator, Metadata } from './constants'
+import { isController, isInjectable } from './utils'
 
 export function createInstance<T>(
   creator: Creator<T>,
   parentContainer: Container[] = [globalContainer]
 ): T | void {
+  if (!(isController(creator) || isInjectable(creator))) {
+    return
+  }
   const constructorParams: ParamsInjectMetadata =
     Reflect.getMetadata(Metadata.Params, creator) || []
 

@@ -1,4 +1,4 @@
-import { Creator, isNumber, isString } from '@koa-ioc/misc'
+import { Creator, isNumber } from '@koa-ioc/misc'
 import { Middleware } from 'koa'
 import path from 'path'
 import KoaRouter from '@koa/router'
@@ -76,12 +76,9 @@ export function generateRouter(controller: Creator): KoaRouter | null {
 
     const handle: Middleware = async (ctx, next) => {
       const handlerArgs: any[] = []
-      paramMetadata.forEach(({ name, index, paramPath }) => {
-        const paths = paramPath.split('.')
-        const value = paths.reduce<any>((prev, nextPath) => prev[nextPath], ctx)
-
-        handlerArgs[index] = isString(name) ? value?.[name] : value
-      })
+      for (const { data, index, handle: paramHandler } of paramMetadata) {
+        handlerArgs[index] = await paramHandler(data, ctx)
+      }
 
       ctxMetadata.forEach((index) => (handlerArgs[index] = ctx))
       nextMetadata.forEach((index) => (handlerArgs[index] = next))
