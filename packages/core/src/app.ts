@@ -10,7 +10,7 @@ import koaStatic from 'koa-static'
 import globalContainer from './container'
 import { generateRouter } from './generateRouter'
 import { Mixins } from './type'
-import { log } from './utils'
+import { ensureProvider, log } from './utils'
 
 export function createApp(koaApp?: Koa): [Koa, Mixins] {
   const app = koaApp || new Koa()
@@ -81,9 +81,9 @@ export function createApp(koaApp?: Koa): [Koa, Mixins] {
         globalPrefix = path.join(prefix, globalPrefix)
         return this
       },
-      addProvider(providers) {
-        ensureArray(providers).forEach((provider) => {
-          globalContainer.provide(provider)
+      addProvider(createOrProviders) {
+        ensureArray(createOrProviders).forEach((createOrProvider) => {
+          globalContainer.provide(ensureProvider(createOrProvider))
         })
         return this
       },

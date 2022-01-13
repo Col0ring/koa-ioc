@@ -11,7 +11,7 @@ import { Decorator, Metadata } from './constants'
 export function createInstance<T>(
   creator: Creator<T>,
   parentContainer: Container[] = [globalContainer]
-): T {
+): T | void {
   const constructorParams: ParamsInjectMetadata =
     Reflect.getMetadata(Metadata.Params, creator) || []
 

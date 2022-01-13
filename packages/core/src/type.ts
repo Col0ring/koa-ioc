@@ -21,6 +21,7 @@ export interface ControllerMetadata {
   prefix?: string
 }
 export type ProvideMetadata = Provider[]
+export type CreatorOrProvider<T = any> = Creator<T> | Provider<T>
 
 export type ImportMetadata = Creator[]
 
@@ -99,5 +100,5 @@ export interface Mixins {
   useBodyParser(options?: koaBody.IKoaBodyOptions): this
   usePrefix(prefix: string): this
   useSession(options?: Partial<koaSession.opts>): this
-  addProvider(providers: Provider | Provider[]): this
+  addProvider(createOrProviders: CreatorOrProvider | CreatorOrProvider[]): this
 }

@@ -1,7 +1,7 @@
-import { isClass } from '@koa-ioc/misc'
+import { Creator, isClass } from '@koa-ioc/misc'
 import chalk from 'chalk'
 import { Decorator } from './constants'
-import { ControllerMetadata } from './type'
+import { ControllerMetadata, Provider } from './type'
 
 export function isInjectable(val: any): boolean {
   return isClass(val) && !!Reflect.getMetadata(Decorator.Injectable, val)
@@ -13,6 +13,18 @@ export function isController(val: any): boolean {
     val
   )
   return !!controllerMetadata?.controller
+}
+
+export function ensureProvider<T>(
+  creatorOrProvider: Creator<T> | Provider<T>
+): Provider<T> {
+  if (isClass(creatorOrProvider)) {
+    return {
+      useClass: creatorOrProvider,
+      provide: creatorOrProvider,
+    }
+  }
+  return creatorOrProvider
 }
 
 function success(message: string) {

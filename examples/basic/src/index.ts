@@ -22,7 +22,7 @@ mixins
     CommonController,
     PostController,
   ])
-  .addProvider([{ useClass: GlobalService, provide: GlobalService }])
+  .addProvider([GlobalService])
   .bootstrap()
 app.listen(3000, () => {
   console.log('listening on http://localhost:3000')
