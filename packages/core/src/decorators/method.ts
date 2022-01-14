@@ -1,14 +1,18 @@
 import { TargetMethodFunction } from '@koa-ioc/misc'
 import { Decorator, Method } from '../constants'
-import { MethodMetadata } from '../type'
+import { MethodMetadata, ResponseOptions } from '../type'
 
 function createMethodDecorator(method: Method) {
-  return function (path = ''): TargetMethodFunction {
+  return function (
+    path = '',
+    responseOptions?: ResponseOptions
+  ): TargetMethodFunction {
     return function (target, methodName) {
       const methodMetadata: MethodMetadata =
         Reflect.getMetadata(Decorator.Method, target.constructor) || []
       methodMetadata.push({
         path,
+        responseOptions,
         method,
         name: methodName,
       })

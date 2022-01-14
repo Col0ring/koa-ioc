@@ -1,4 +1,4 @@
-import { Context, Middleware } from 'koa'
+import { Context, BaseResponse, Middleware } from 'koa'
 import KoaRouter from '@koa/router'
 import koaBody from 'koa-body'
 import KoaLogger from 'koa-logger'
@@ -9,13 +9,32 @@ import { Creator, PromisifyValue } from '@koa-ioc/misc'
 import { Method } from './constants'
 
 export type Methods = Method | Capitalize<Method>
-
+export interface ResponseOptions {
+  /**
+   * Return response header.
+   */
+  headers?: BaseResponse['headers']
+  /**
+   * Get/Set response status code.
+   */
+  status?: BaseResponse['status']
+  /**
+   * Get response status message
+   */
+  message?: BaseResponse['message']
+}
 export interface MethodConfig {
   path: string
   method: Methods
+  responseOptions?: ResponseOptions
   name: string
 }
 export type MethodMetadata = MethodConfig[]
+
+export type ExceptionHandler = (
+  error: unknown,
+  ctx: Context
+) => PromisifyValue<any>
 export interface ControllerMetadata {
   controller: boolean
   prefix?: string
@@ -51,7 +70,7 @@ export interface Middlewares {
 }
 export type MiddlewareOptions = MiddlewareConfig | Middleware
 export type MiddlewareMetadata = MiddlewareConfig[]
-export type ExceptionMetadata = Middleware
+export type ExceptionMetadata = ExceptionHandler
 export type CtxMetadata = number[]
 export type NextMetadata = number[]
 export type PipeOptions = PipeTransformer | Creator<PipeTransformer>

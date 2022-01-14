@@ -1,6 +1,7 @@
 import { Controller, Ctx, Exception, Get, Middleware } from '@koa-ioc/core'
 import { createJwtMiddleware } from '@koa-ioc/auth'
 import { Context } from 'koa'
+import { HttpException } from '@koa-ioc/exception'
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const {
@@ -16,11 +17,9 @@ const {
 })
 
 @Controller('/auth')
-@Exception(async (ctx, next) => {
-  try {
-    await next()
-  } catch (error: any) {
-    ctx.body = error.toJSON()
+@Exception(function (error, ctx) {
+  if (error instanceof HttpException) {
+    ctx.body = error
   }
 })
 export class AuthController {

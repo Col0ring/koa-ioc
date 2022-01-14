@@ -1,6 +1,7 @@
 export type PromisifyValue<T = any> = Promise<T> | T
 
 export type EnsureArray<T> = T extends any[] | readonly any[] ? T : T[]
+
 export interface Creator<T = any, P extends any[] = any[]> {
   new (...args: P): T
 }

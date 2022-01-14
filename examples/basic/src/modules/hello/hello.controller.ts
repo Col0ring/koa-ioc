@@ -13,17 +13,15 @@ import {
   Inject,
   Import,
 } from '@koa-ioc/core'
+import { HttpException } from '@koa-ioc/exception'
 import { ValidatorIntegerPipe } from '@koa-ioc/pipe'
 import { HelloService } from './hello.service'
 
 @Controller('/hello')
 // @Pipe(ValidateClassPipe)
-@Exception(async (ctx, next) => {
-  try {
-    await next()
-  } catch (error) {
-    console.log(error)
-    ctx.body = 'error'
+@Exception((err, ctx) => {
+  if (err instanceof HttpException) {
+    ctx.body = err.toJSON()
   }
 })
 @Middleware([
@@ -57,14 +55,6 @@ export class HelloController {
       position: 'pre',
     },
   ])
-  @Exception(async (ctx, next) => {
-    try {
-      await next()
-    } catch (error: any) {
-      console.log(error)
-      ctx.body = error.toJSON()
-    }
-  })
   hello(@Ctx() ctx: Context, @Param('a', ValidatorIntegerPipe) a: string) {
     return this.helloService.hello() + a
   }

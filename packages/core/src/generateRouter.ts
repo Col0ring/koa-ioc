@@ -4,7 +4,13 @@ import path from 'path'
 import KoaRouter from '@koa/router'
 import { createInstance } from './createInstance'
 import { isController, log } from './utils'
-import { Decorator, Metadata, Method, MiddlewarePosition } from './constants'
+import {
+  Decorator,
+  Metadata,
+  Method,
+  MiddlewarePosition,
+  responseOptionKeys,
+} from './constants'
 import {
   ControllerMetadata,
   CtxMetadata,
@@ -17,6 +23,17 @@ import {
   PipeMetadata,
   PipeTransformer,
 } from './type'
+
+function exceptionHandlerWrapper(handler: ExceptionMetadata): Middleware {
+  return async (ctx, next) => {
+    try {
+      await next()
+    } catch (error) {
+      const body = await handler(error, ctx)
+      ctx.body ??= body
+    }
+  }
+}
 
 export function generateRouter(controller: Creator): KoaRouter | null {
   if (!isController(controller)) {
@@ -39,7 +56,9 @@ export function generateRouter(controller: Creator): KoaRouter | null {
     Reflect.getMetadata(Decorator.Middleware, controller) || []
   const controllerExceptionMetadata: ExceptionMetadata =
     Reflect.getMetadata(Decorator.Exception, controller) ||
-    ((_, next) => next())
+    ((error) => {
+      throw error
+    })
 
   const {
     preMiddlewares: preControllerMiddlewares,
@@ -51,77 +70,89 @@ export function generateRouter(controller: Creator): KoaRouter | null {
   const controllerPipeMetadata: PipeMetadata =
     Reflect.getMetadata(Decorator.Pipe, controller) || []
 
-  methodMetadata.forEach(({ method, path: pathname, name: key }) => {
-    const middlewareMetadata: MiddlewareMetadata =
-      Reflect.getMetadata(Decorator.MethodMiddleware, controller, key) || []
-    const exceptionMetadata: ExceptionMetadata =
-      Reflect.getMetadata(Decorator.MethodException, controller, key) ||
-      ((_, next) => next())
-    const ctxMetadata: CtxMetadata =
-      Reflect.getMetadata(Decorator.Ctx, controller, key) || []
-    const nextMetadata: NextMetadata =
-      Reflect.getMetadata(Decorator.Next, controller, key) || []
+  methodMetadata.forEach(
+    ({ method, responseOptions, path: pathname, name: key }) => {
+      const middlewareMetadata: MiddlewareMetadata =
+        Reflect.getMetadata(Decorator.MethodMiddleware, controller, key) || []
+      const exceptionMetadata: ExceptionMetadata =
+        Reflect.getMetadata(Decorator.MethodException, controller, key) ||
+        ((error) => {
+          throw error
+        })
+      const ctxMetadata: CtxMetadata =
+        Reflect.getMetadata(Decorator.Ctx, controller, key) || []
+      const nextMetadata: NextMetadata =
+        Reflect.getMetadata(Decorator.Next, controller, key) || []
 
-    const pipeMetadata: PipeMetadata =
-      Reflect.getMetadata(Decorator.MethodPipe, controller, key) || []
+      const pipeMetadata: PipeMetadata =
+        Reflect.getMetadata(Decorator.MethodPipe, controller, key) || []
 
-    const paramMetadata: ParamMetadata =
-      Reflect.getMetadata(Decorator.Param, controller, key) || []
+      const paramMetadata: ParamMetadata =
+        Reflect.getMetadata(Decorator.Param, controller, key) || []
 
-    const params: any[] = Reflect.getMetadata(Metadata.Params, instance, key)
+      const params: any[] = Reflect.getMetadata(Metadata.Params, instance, key)
 
-    const hasNextHandler = nextMetadata.length !== 0
-    const { preMiddlewares, postMiddlewares } =
-      getMiddlewares(middlewareMetadata)
+      const hasNextHandler = nextMetadata.length !== 0
+      const { preMiddlewares, postMiddlewares } =
+        getMiddlewares(middlewareMetadata)
 
-    const handle: Middleware = async (ctx, next) => {
-      const handlerArgs: any[] = []
-      for (const { data, index, handle: paramHandler } of paramMetadata) {
-        handlerArgs[index] = await paramHandler(data, ctx)
-      }
+      const handle: Middleware = async (ctx, next) => {
+        const handlerArgs: any[] = []
+        for (const { data, index, handle: paramHandler } of paramMetadata) {
+          handlerArgs[index] = await paramHandler(data, ctx)
+        }
 
-      ctxMetadata.forEach((index) => (handlerArgs[index] = ctx))
-      nextMetadata.forEach((index) => (handlerArgs[index] = next))
-      // pipe
-      async function pipeTransform(pipe: PipeTransformer, index?: number) {
-        if (isNumber(index)) {
-          handlerArgs[index] = await pipe.transform(handlerArgs[index], {
-            metatype: params[index],
-          })
-        } else {
-          for (let i = 0; i < params.length; i++) {
-            handlerArgs[i] = await pipe.transform(handlerArgs[i], {
-              metatype: params[i],
+        ctxMetadata.forEach((index) => (handlerArgs[index] = ctx))
+        nextMetadata.forEach((index) => (handlerArgs[index] = next))
+        // pipe
+        async function pipeTransform(pipe: PipeTransformer, index?: number) {
+          if (isNumber(index)) {
+            handlerArgs[index] = await pipe.transform(handlerArgs[index], {
+              metatype: params[index],
             })
+          } else {
+            for (let i = 0; i < params.length; i++) {
+              handlerArgs[i] = await pipe.transform(handlerArgs[i], {
+                metatype: params[i],
+              })
+            }
           }
         }
-      }
-      for (const { pipe, index } of controllerPipeMetadata) {
-        await pipeTransform(pipe, index)
+        for (const { pipe, index } of controllerPipeMetadata) {
+          await pipeTransform(pipe, index)
+        }
+
+        for (const { pipe, index } of pipeMetadata) {
+          await pipeTransform(pipe, index)
+        }
+
+        const body = await instance[key](...handlerArgs)
+        ctx.body ??= body
+        if (responseOptions) {
+          responseOptionKeys.forEach((k) => {
+            if (responseOptions[k]) {
+              // eslint-disable-next-line @typescript-eslint/no-extra-semi
+              ;(ctx.response as any)[k] = responseOptions[k]
+            }
+          })
+        }
+        if (!hasNextHandler) {
+          await next()
+        }
       }
 
-      for (const { pipe, index } of pipeMetadata) {
-        await pipeTransform(pipe, index)
-      }
-
-      const body = await instance[key](...handlerArgs)
-      ctx.body ??= body
-      if (!hasNextHandler) {
-        await next()
-      }
+      router[method.toLowerCase() as Method](
+        path.join('/', pathname),
+        exceptionHandlerWrapper(controllerExceptionMetadata),
+        exceptionHandlerWrapper(exceptionMetadata),
+        ...preControllerMiddlewares,
+        ...preMiddlewares,
+        handle,
+        ...postMiddlewares,
+        ...postControllerMiddlewares
+      )
     }
-
-    router[method.toLowerCase() as Method](
-      path.join('/', pathname),
-      controllerExceptionMetadata,
-      exceptionMetadata,
-      ...preControllerMiddlewares,
-      ...preMiddlewares,
-      handle,
-      ...postMiddlewares,
-      ...postControllerMiddlewares
-    )
-  })
+  )
 
   return router
 }

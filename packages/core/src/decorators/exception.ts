@@ -1,8 +1,8 @@
 import { Creator, TargetObject, isString } from '@koa-ioc/misc'
-import { Middleware } from 'koa'
+import { ExceptionHandler } from '../type'
 import { Decorator } from '../constants'
 
-export function Exception(handler: Middleware) {
+export function Exception(handler: ExceptionHandler) {
   return function (target: Creator | TargetObject, methodName?: string) {
     if (isString(methodName)) {
       Reflect.defineMetadata(

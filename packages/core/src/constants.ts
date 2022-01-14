@@ -50,3 +50,5 @@ export enum MiddlewarePosition {
   Pre = 'pre',
   Post = 'post',
 }
+
+export const responseOptionKeys = ['headers', 'status', 'message'] as const
