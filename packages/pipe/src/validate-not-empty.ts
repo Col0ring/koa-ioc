@@ -2,17 +2,19 @@ import { PipeTransformer } from '@koa-ioc/core'
 import { BadRequestException } from '@koa-ioc/exception'
 import { Validator } from './validator'
 
-export class ValidatorIntegerPipe extends Validator implements PipeTransformer {
+export class ValidatorNotEmptyPipe
+  extends Validator
+  implements PipeTransformer
+{
   async transform(value: any) {
-    const num = +value
-    if (Number.isNaN(num)) {
+    if (value) {
       const errorInstance = new BadRequestException({
-        message: 'Please input an integer',
+        message: 'Please input non-empty data',
       })
       await this.throwError(errorInstance)
       return value
     }
     this.onValid(value)
-    return num
+    return value
   }
 }
