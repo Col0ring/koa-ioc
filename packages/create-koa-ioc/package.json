@@ -1,6 +1,6 @@
 {
   "name": "create-koa-ioc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./bin/index.js",
   "author": {
     "name": "Col0ring",

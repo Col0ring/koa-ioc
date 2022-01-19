@@ -7,9 +7,9 @@
     "start": "node ./dist/index.js"
   },
   "dependencies": {
-    "@koa-ioc/core": "^0.0.3",
-    "@koa-ioc/exception": "^0.0.3",
-    "@koa-ioc/pipe": "^0.0.3",
+    "@koa-ioc/core": "^0.0.4",
+    "@koa-ioc/exception": "^0.0.4",
+    "@koa-ioc/pipe": "^0.0.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "koa": "^2.13.4"
