@@ -1,6 +1,6 @@
 {
   "name": "@koa-ioc/core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/index.d.ts",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.16.7",
-    "@koa-ioc/misc": "^0.0.3",
+    "@koa-ioc/misc": "^0.0.4",
     "@koa/cors": "^3.1.0",
     "@koa/router": "^10.1.1",
     "koa-body": "^4.2.0",

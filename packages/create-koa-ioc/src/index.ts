@@ -132,7 +132,7 @@ async function init() {
   pkg.name = packageName || targetDir
 
   fs.writeFileSync(
-    path.join(templateDir, 'package.json'),
+    path.join(targetDir, 'package.json'),
     JSON.stringify(pkg, null, 2)
   )
 

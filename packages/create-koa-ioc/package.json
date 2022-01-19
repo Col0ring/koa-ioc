@@ -1,6 +1,6 @@
 {
   "name": "create-koa-ioc",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "./bin/index.js",
   "author": {
     "name": "Col0ring",
@@ -16,9 +16,8 @@
     "type": "git",
     "url": "https://github.com/Col0ring/koa-ioc.git"
   },
-  "private": true,
   "bin": {
-    "create-koa-ioc": "./bind/index.js",
+    "create-koa-ioc": "./bin/index.js",
     "kioc": "./bin/index.js"
   },
   "publishConfig": {
