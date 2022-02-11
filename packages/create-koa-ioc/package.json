@@ -1,6 +1,6 @@
 {
   "name": "create-koa-ioc",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "./bin/index.js",
   "author": {
     "name": "Col0ring",
@@ -27,6 +27,7 @@
     "build": "ts-node ../../scripts/build.ts --package create-koa-ioc"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "kolorist": "^1.5.1",
     "minimist": "^1.2.5",
     "prompts": "^2.4.2"
